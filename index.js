@@ -3,14 +3,14 @@ const path = require('path')
 const app = express()
 
 app.use(express.json())
+app.use(express.static('public'))
 const cors = require('cors')
+
 app.use(cors({
   origin: ['http://localhost:3000', 'https://puhelinluettelo-backend-nnym.onrender.com'],
   methods: ['GET', 'POST', 'DELETE', 'PUT'],
   allowedHeaders: ['Content-Type'],
 }))
-app.use(express.static(path.join(__dirname, 'dist')))
-
 
 var morgan = require('morgan')
 morgan.token('body', (req) => {return req.method === 'POST' ? JSON.stringify(req.body) : ''})
@@ -79,10 +79,10 @@ app.post('/api/persons', (req, res) => {
 })
 
 app.use((req, res) => {
-  res.sendFile(path.resolve(__dirname, 'dist', 'index.html'))
+  res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
 })
 
-const PORT = process.env.PORT || 1000
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
