@@ -4,6 +4,8 @@ const app = express()
 app.use(express.json())
 const cors = require('cors')
 app.use(cors())
+app.use(express.static('dist'))
+
 
 var morgan = require('morgan')
 morgan.token('body', (req) => {return req.method === 'POST' ? JSON.stringify(req.body) : ''})
@@ -76,3 +78,6 @@ app.post('/api/persons', (req, res) => {
   res.json(person)
 })
 
+app.get('*', (req, res) => {
+  res.sendFile(__dirname + '/dist/index.html')
+})
