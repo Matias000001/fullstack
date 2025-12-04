@@ -4,7 +4,11 @@ const app = express()
 
 app.use(express.json())
 const cors = require('cors')
-app.use(cors())
+app.use(cors({
+  origin: ['http://localhost:3000', 'https://puhelinluettelo-backend-nnym.onrender.com'],
+  methods: ['GET', 'POST', 'DELETE', 'PUT'],
+  allowedHeaders: ['Content-Type'],
+}))
 app.use(express.static(path.join(__dirname, 'dist'))) 
 
 
@@ -78,7 +82,7 @@ app.use((req, res) => {
   res.sendFile(path.resolve(__dirname, 'dist', 'index.html'))
 })
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT || 1000
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })

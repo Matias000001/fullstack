@@ -6,10 +6,11 @@
   "proxy": "http://localhost:3001",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "server": "json-server -p 3001 db.json"
+    "server": "json-server -p 3001 db.json",
+    "build": "vite build && cp -r dist ../../public",
+    "deploy": "npm run build && cd ../.. && git add . && git commit -m 'build new version' && git push"
   },
   "dependencies": {
     "axios": "^1.13.2",
