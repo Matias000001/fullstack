@@ -21,3 +21,11 @@ Content-Type: application/json
   "name": "Arto",
   "number": "123"
 }
+
+###
+
+GET https://puhelinluettelo-backend-nnym.onrender.com/api/persons
+
+###
+
+GET https://puhelinluettelo-backend-nnym.onrender.com/info
