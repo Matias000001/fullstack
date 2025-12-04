@@ -9,7 +9,7 @@ app.use(cors({
   methods: ['GET', 'POST', 'DELETE', 'PUT'],
   allowedHeaders: ['Content-Type'],
 }))
-app.use(express.static(path.join(__dirname, 'dist')))
+app.use(express.static('dist'))
 
 
 var morgan = require('morgan')
