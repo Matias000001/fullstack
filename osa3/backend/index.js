@@ -5,7 +5,7 @@ const app = express()
 app.use(express.json())
 const cors = require('cors')
 app.use(cors())
-app.use(express.static(path.join(__dirname, 'dist')))
+app.use(express.static(path.join(__dirname, 'dist'))) 
 
 
 var morgan = require('morgan')
@@ -22,11 +22,6 @@ let persons = [
 
 app.get('/api/persons', (req, res) => {
   res.json(persons)
-})
-
-const PORT = process.env.PORT || 3001
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
 })
 
 app.get('/info', (req, res) => {
@@ -79,6 +74,11 @@ app.post('/api/persons', (req, res) => {
   res.json(person)
 })
 
-app.get('*', (req, res) => {
+app.use((req, res) => {
   res.sendFile(path.resolve(__dirname, 'dist', 'index.html'))
+})
+
+const PORT = process.env.PORT || 3001
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`)
 })
