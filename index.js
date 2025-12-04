@@ -3,7 +3,7 @@ const path = require('path')
 const app = express()
 
 app.use(express.json())
-app.use(express.static('public'))
+app.use(express.static('dist'))
 const cors = require('cors')
 
 app.use(cors({
@@ -79,7 +79,7 @@ app.post('/api/persons', (req, res) => {
 })
 
 app.use((req, res) => {
-  res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
+  res.sendFile(path.resolve(__dirname, 'dist', 'index.html'))
 })
 
 const PORT = process.env.PORT || 3001
