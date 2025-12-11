@@ -1,4 +1,6 @@
+require('dotenv').config()
 const express = require('express')
+const Person = require('./models/person')
 const path = require('path')
 const app = express()
 
@@ -24,9 +26,13 @@ let persons = [
   { id: 4, name: 'Mary Poppendieck', number: '39-23-6423122' }
 ]
 
-app.get('/api/persons', (req, res) => {
-  res.json(persons)
+
+app.get('/api/persons', (request, response) => {
+  Person.find({}).then(persons => {
+    response.json(persons)
+  })
 })
+
 
 app.get('/info', (req, res) => {
   const count = persons.length
@@ -38,45 +44,37 @@ app.get('/info', (req, res) => {
   )
 })
 
-app.get('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id)
-  const person = persons.find(p => p.id === id)
-
-  if (person) {
-    res.json(person)
-  } else {
-    res.status(404).end()
-  }
+app.get('/api/persons/:id', (request, response) => {
+  Person.findById(request.params.id).then(person => {
+    response.json(person)
+  })
 })
 
 app.delete('/api/persons/:id', (req, res) => {
   const id = Number(req.params.id)
-  persons = persons.filter(person => person.id !== id)
-
-  res.status(204).end()
+  Person.findByIdAndRemove(id).then(() => {
+    res.status(204).end()
+  })
 })
 
-app.post('/api/persons', (req, res) => {
-  const body = req.body
+app.post('/api/persons', (request, response) => {
+  const body = request.body
 
   if (!body.name || !body.number) {
-    return res.status(400).json({ error: 'name or number missing' })
+    return response.status(400).json({ error: 'name or number missing' })
   }
 
-  const nameExists = persons.some(person => person.name === body.name)
-  if (nameExists) {
-    return res.status(400).json({ error: 'name must be unique' })
-  }
-
-  const person = {
-    id: Math.floor(Math.random() * 1000000),
+  const person = new Person({
     name: body.name,
-    number: body.number
-  }
+    number: body.number,
+  })
 
-  persons = persons.concat(person)
-  res.json(person)
+  person.save().then(savedPerson => {
+    response.json(savedPerson)
+  })
 })
+
+
 
 app.use((req, res, next) => {
   if (req.path.startsWith('/api')) {
@@ -86,7 +84,9 @@ app.use((req, res, next) => {
 })
 
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
+
+
