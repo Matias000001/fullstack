@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import noteService from './services/persons'
 import personService from './services/persons'
 import Notification from './components/Notification'
 
@@ -63,7 +62,7 @@ function App() {
   }
 
   useEffect(() => {
-    noteService
+    personService
       .getAll()
       .then(initialPersons => {
         setPersons(initialPersons)
@@ -72,6 +71,7 @@ function App() {
         notify('Tietojen haku epäonnistui')
       })
   }, [])
+
   function handleDelete(id, name) {
     personService
       .remove(id)
@@ -98,9 +98,8 @@ function App() {
           setNewNumber('')
           notify(`Changed number of ${returnedPerson.name}`, 'success')
         })
-        .catch(() => {
-          notify(`Information of ${existingPerson.name} has already been removed from server`, 'error')
-          setPersons(persons.filter(p => p.id !== existingPerson.id))
+        .catch(error => {
+          notify(error.response.data.error, 'error')
         })
     } else {
       const personObject = { name: newName, number: newNumber }
@@ -112,8 +111,8 @@ function App() {
           setNewNumber('')
           notify(`Added ${returnedPerson.name}`, 'success')
         })
-        .catch(() => {
-          notify('Creating person failed', 'error')
+        .catch(error => {
+          notify(error.response.data.error, 'error')
         })
     }
   }
