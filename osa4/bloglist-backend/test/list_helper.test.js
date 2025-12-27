@@ -61,6 +61,83 @@ const listWithOneBlog = [
   })
 })
 
+describe('favorite blog', () => {
+  const blogs = [
+    {
+      _id: '1',
+      title: 'First',
+      author: 'A',
+      url: 'http://a.com',
+      likes: 5,
+    },
+    {
+      _id: '2',
+      title: 'Second',
+      author: 'B',
+      url: 'http://b.com',
+      likes: 10,
+    },
+    {
+      _id: '3',
+      title: 'Third',
+      author: 'C',
+      url: 'http://c.com',
+      likes: 7,
+    }
+  ]
+
+  test('returns the blog with most likes', () => {
+    const result = listHelper.favoriteBlog(blogs)
+
+    assert.deepStrictEqual(result, {
+      _id: '2',
+      title: 'Second',
+      author: 'B',
+      url: 'http://b.com',
+      likes: 10,
+    })
+  })
+})
+
+describe('most blogs', () => {
+  const blogs = [
+    { author: 'A', likes: 1 },
+    { author: 'B', likes: 2 },
+    { author: 'A', likes: 3 },
+    { author: 'C', likes: 4 },
+    { author: 'A', likes: 5 },
+  ]
+
+  test('author with most blogs is returned', () => {
+    const result = listHelper.mostBlogs(blogs)
+
+    assert.deepStrictEqual(result, {
+      author: 'A',
+      blogs: 3
+    })
+  })
+})
+
+describe('most likes', () => {
+  const blogs = [
+    { author: 'A', likes: 1 },
+    { author: 'B', likes: 10 },
+    { author: 'A', likes: 5 },
+    { author: 'B', likes: 7 },
+    { author: 'C', likes: 3 },
+  ]
+
+  test('author with most total likes is returned', () => {
+    const result = listHelper.mostLikes(blogs)
+
+    assert.deepStrictEqual(result, {
+      author: 'B',
+      likes: 17
+    })
+  })
+})
+
+
 test('dummy returns one', () => {
     const blogs = []
 
