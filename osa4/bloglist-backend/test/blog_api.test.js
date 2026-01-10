@@ -4,6 +4,8 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blog')
+const User = require('../models/user')
+const bcrypt = require('bcrypt')
 
 const api = supertest(app)
 
@@ -137,6 +139,35 @@ describe('updating a blog', () => {
       .expect('Content-Type', /application\/json/)
 
     assert.strictEqual(response.body.likes, blogToUpdate.likes + 1)
+  })
+})
+
+describe('when there is initially one user in db', () => {
+  beforeEach(async () => {
+    await User.deleteMany({})
+    const passwordHash = await bcrypt.hash('salasana123', 10)
+    const user = new User({ username: 'matias', name: 'Matias', passwordHash })
+    await user.save()
+  })
+
+  test.only('cannot create user with short username', async () => {
+    const newUser = { username: 'ab', name: 'Short', password: 'valid123' }
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+  })
+
+  test.only('cannot create user with duplicate username', async () => {
+    const duplicateUser = { username: 'matias', name: 'Duplicate', password: 'salasana123' }
+    await api
+      .post('/api/users')
+      .send(duplicateUser)
+      .expect(400)
+      .expect(res => {
+        assert(res.body.error.includes('unique'))
+      })
   })
 })
 
