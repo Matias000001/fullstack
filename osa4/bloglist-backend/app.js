@@ -16,5 +16,7 @@ app.use('/api/blogs', require('./controllers/blogs'))
 app.use('/api/users', require('./controllers/users'))
 app.use('/api/login', loginRouter)
 app.use(middleware.errorHandler)
+app.use(middleware.tokenExtractor)
+app.use(middleware.userExtractor)
 
 module.exports = app
