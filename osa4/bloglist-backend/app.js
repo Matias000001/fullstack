@@ -12,11 +12,10 @@ const MONGODB_URI = process.env.NODE_ENV === 'test'
 connectToMongo(MONGODB_URI)
 
 app.use(express.json())
+app.use(middleware.tokenExtractor)
 app.use('/api/blogs', require('./controllers/blogs'))
 app.use('/api/users', require('./controllers/users'))
 app.use('/api/login', loginRouter)
 app.use(middleware.errorHandler)
-app.use(middleware.tokenExtractor)
-app.use(middleware.userExtractor)
 
 module.exports = app
