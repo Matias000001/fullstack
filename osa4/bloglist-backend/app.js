@@ -16,6 +16,11 @@ app.use(middleware.tokenExtractor)
 app.use('/api/blogs', require('./controllers/blogs'))
 app.use('/api/users', require('./controllers/users'))
 app.use('/api/login', loginRouter)
+
+if (process.env.NODE_ENV === 'test') {
+  app.use('/api/testing', require('./controllers/testing'))
+}
+
 app.use(middleware.errorHandler)
 
 module.exports = app
