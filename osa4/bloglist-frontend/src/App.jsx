@@ -26,6 +26,7 @@ const App = () => {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
       blogService.setToken(user.token)
+      blogService.getAll().then(blogs => setBlogs(blogs))
     }
   }, [])
 
@@ -77,6 +78,25 @@ const App = () => {
     blogFormRef.current.toggleVisibility()
   }
 
+  const handleLike = async (blog) => {
+    const updatedBlog = {
+      title: blog.title,
+      author: blog.author,
+      url: blog.url,
+      likes: blog.likes + 1,
+      user: blog.user ? blog.user.id || blog.user : blog.user
+    }
+    const returned = await blogService.update(blog.id, updatedBlog)
+    setBlogs(blogs.map(b => b.id === blog.id ? { ...returned, user: blog.user } : b))
+  }
+
+  const handleDelete = async (blog) => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+      await blogService.remove(blog.id)
+      setBlogs(blogs.filter(b => b.id !== blog.id))
+    }
+  }
+
 
 
   if (user === null) {
@@ -122,8 +142,8 @@ const App = () => {
       <Togglable buttonLabel="create new blog" ref={blogFormRef}>
         <BlogForm createBlog={addBlog} />
       </Togglable>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+      {[...blogs].sort((a, b) => b.likes - a.likes).map(blog =>
+        <Blog key={blog.id} blog={blog} handleLike={handleLike} handleDelete={handleDelete} user={user} />
       )}
     </div>
   )
